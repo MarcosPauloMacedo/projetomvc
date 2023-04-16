@@ -1,76 +1,45 @@
 <?php 
-include_once('../../config/config.php');
+include_once('C:\wamp64\www\mvc\src\model\FormularioTable.php');
+include_once('C:\wamp64\www\mvc\src\view\Views.php');
 
-class FormController extends Config{
+class FormController extends FormularioTable{
     public $datas;
 
     public function index()
     {
-        $this->conexao();
-        $this->datas = mysqli_query($this->conexao,"SELECT * FROM formulario");
+        $this->datas = $this->datasAll();
+        $index = Views::index($this->datas);
 
-        $this->delete();
+        if(!empty($_GET))
+        {
+            $this->delete();
+        }
 
-        return $this->datas;
+        return $index;
     }
 
     public function add()
     {   
-        $this->conexao();
         if(!empty($_POST)){
-           
-            $name = filter_input(INPUT_POST,'name');                                                                             
-            $email = filter_input(INPUT_POST,'email');
-            $tel= filter_input(INPUT_POST,'tel');
-            $address = filter_input(INPUT_POST,'address');
+           $this->newData();
+        }
 
-            mysqli_query($this->conexao, "INSERT INTO 
-            formulario(nome,email,telefone,endereco) 
-            VALUES ('$name','$email','$tel','$address')");
-            header("location: index.php");}
+        $add = Views::enviarAdd();
+        return $add;
     }
 
     public function edit()
     {
-        $this->conexao();
-        if(!empty($_GET))
-        {
-            $id = $_GET['id'];
-            $dados = mysqli_query($this->conexao,"SELECT * FROM formulario where id = $id");
-            $dadosFormatado = [];
-
-            foreach($dados as $dado)
-            {
-                array_push($dadosFormatado,$dado);
-            }
-
-        }
+        $info = $this->listDate();
         
+        $edit = Views::edit($info[0]['nome'],$info[0]['email'],
+        $info[0]['telefone'],$info[0]['endereco']);
+
         if(!empty($_POST) && !empty($_GET))
         {
-            $name = filter_input(INPUT_POST,'name');
-            $email = filter_input(INPUT_POST,'email');
-            $tel = filter_input(INPUT_POST,'tel');
-            $address = filter_input(INPUT_POST,'address');
-            $id = $_GET['id'];
-            
-            mysqli_query($this->conexao,"UPDATE formulario SET 
-            nome='$name',email='$email',telefone='$tel',endereco='$address' WHERE id = $id");
-
-            header('location: index.php');
+            $this->editDate();
         }
 
-        return $dadosFormatado;
-    }
-
-    public function delete()
-    {   
-        $this->conexao();
-        if(!empty($_GET))
-        {
-            $id = $_GET['id'];
-            mysqli_query($this->conexao,"DELETE FROM formulario where id = $id");
-            header('location: index.php');
-        }
+        return $edit;
     }
 }

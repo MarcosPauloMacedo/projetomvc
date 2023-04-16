@@ -1,19 +1,24 @@
 <?php
-require_once('C:\wamp64\www\cars\src\controller\FormController.php');
+require_once('C:\wamp64\www\mvc\src\controller\FormController.php');
 
-$routes = [
-    '/' => [
-        'controller' => 'FormController',
-        'method' => 'index'
-    ],
-    '/add' => [
-        'controller' => 'FormController',
-        'method' => 'add'
-    ],
-    '/edit' => [
-        'controller' => 'FormController',
-        'method' => 'edit'
-    ]
-];
+class Routes{
+    public function rota(){
+        $routes = [
+            '/' => [
+                'controller' => 'FormController',
+                'method' => 'index'
+            ],
+            '/add' => [
+                'controller' => 'FormController',
+                'method' => 'add'
+            ],
+            '/edit' => [
+                'controller' => 'FormController',
+                'method' => 'edit'
+            ]
+        ];
+        
+        return $routes;
+    }
+}
 
-return $routes;
